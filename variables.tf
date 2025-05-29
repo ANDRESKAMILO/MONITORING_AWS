@@ -31,6 +31,7 @@ variable "aws_region" {
 }
 
 variable "external_id" {
-  type      = string
-  sensitive = true
+  description = "External ID for Datadog integration"
+  type        = string
+  default     = "default-external-id"
 } 
