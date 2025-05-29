@@ -25,15 +25,9 @@ resource "datadog_dashboard" "dashboard_kai" {
   title        = "Dashboard KAI - Infra AWS"
   description  = "Monitoreo automático de EC2 y S3"
   layout_type  = "ordered"
-  is_read_only = false
+  restricted_roles = []
 
   widget {
-    layout {
-      x      = 0
-      y      = 0
-      width  = 47
-      height = 15
-    }
     timeseries_definition {
       title       = "EC2 CPU usage (Average)"
       show_legend = true

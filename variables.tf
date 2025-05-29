@@ -33,9 +33,4 @@ variable "aws_region" {
 variable "external_id" {
   type      = string
   sensitive = true
-}
-
-provider "aws" {
-  region = var.aws_region
-  # No es necesario especificar access_key y secret_key si usas el archivo de credenciales
 } 
