@@ -47,9 +47,36 @@ resource "datadog_dashboard" "dashboard_kai" {
 
 # Bucket S3 de ejemplo
 resource "aws_s3_bucket" "example" {
-  bucket = "example-bucket-${var.aws_region}"
+  bucket = "example-bucket-acbg-may25-${var.aws_region}"
 
   tags = {
+    Environment = "Development"
+    Project     = "Monitoring AWS"
+  }
+}
+
+# Instancia EC2 de ejemplo para generar métricas
+data "aws_ami" "amazon_linux_2" {
+  most_recent = true
+  owners      = ["amazon"]
+
+  filter {
+    name   = "name"
+    values = ["amzn2-ami-hvm-*-x86_64-gp2"]
+  }
+
+  filter {
+    name   = "virtualization-type"
+    values = ["hvm"]
+  }
+}
+
+resource "aws_instance" "example_ec2" {
+  ami           = data.aws_ami.amazon_linux_2.id
+  instance_type = "t2.micro" # Elegible para la capa gratuita
+
+  tags = {
+    Name        = "Example-EC2-KAI"
     Environment = "Development"
     Project     = "Monitoring AWS"
   }
