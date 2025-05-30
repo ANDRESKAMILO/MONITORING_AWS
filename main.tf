@@ -47,6 +47,81 @@ resource "datadog_dashboard" "dashboard_kai" {
       }
     }
   }
+
+  widget {
+    timeseries_definition {
+      title       = "EC2 CPU Credit Balance (Average)"
+      show_legend = true
+      request {
+        q            = "avg:aws.ec2.cpucredit_balance{*} by {instance_id}"
+        display_type = "line"
+      }
+    }
+  }
+
+  widget {
+    timeseries_definition {
+      title       = "EC2 Disk Read/Write Ops (Sum)"
+      show_legend = true
+      request {
+        q            = "sum:aws.ec2.disk_read_ops{*} by {instance_id}.as_count()"
+        display_type = "bar"
+      }
+      request {
+        q            = "sum:aws.ec2.disk_write_ops{*} by {instance_id}.as_count()"
+        display_type = "bar"
+      }
+    }
+  }
+
+  widget {
+    timeseries_definition {
+      title       = "EC2 Network In/Out (Sum)"
+      show_legend = true
+      request {
+        q            = "sum:aws.ec2.network_in{*} by {instance_id}.as_rate()"
+        display_type = "line"
+      }
+      request {
+        q            = "sum:aws.ec2.network_out{*} by {instance_id}.as_rate()"
+        display_type = "line"
+      }
+    }
+  }
+
+  widget {
+    timeseries_definition {
+      title       = "S3 Bucket Size (Bytes)"
+      show_legend = true
+      request {
+        q            = "avg:aws.s3.bucket_size_bytes{bucket_name:${aws_s3_bucket.example.bucket}} by {bucket_name}"
+        display_type = "area"
+      }
+    }
+  }
+
+  widget {
+    query_value_definition {
+      title           = "S3 Number of Objects"
+      precision       = 0
+      timespan        = "5m"
+      custom_unit     = "object"
+      request {
+        q = "max:aws.s3.number_of_objects{bucket_name:${aws_s3_bucket.example.bucket}}.as_count()"
+      }
+    }
+  }
+
+  widget {
+    timeseries_definition {
+      title       = "S3 Client Errors (4xx Sum)"
+      show_legend = true
+      request {
+        q            = "sum:aws.s3.4xx_errors{bucket_name:${aws_s3_bucket.example.bucket}} by {bucket_name}.as_count()"
+        display_type = "bar"
+      }
+    }
+  }
 }
 
 resource "random_string" "bucket_suffix" {

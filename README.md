@@ -25,4 +25,12 @@ terraform-monitoring/
 
 ## Uso
 
-Ejecutar el pipeline de GitHub Actions para desplegar la infraestructura y monitorear los recursos en Datadog. 
+Ejecutar el pipeline de GitHub Actions para desplegar la infraestructura y monitorear los recursos en Datadog.
+
+## 📚 Documentación Detallada
+
+Para una guía completa sobre cómo utilizar y extender este proyecto de monitoreo, consulta los siguientes documentos en el directorio `docs/`:
+
+*   **[Curso de Configuración Inicial (`docs/Curso_1.md`)](docs/Curso_1.md):** Pasos detallados para configurar el sistema de monitoreo base, incluyendo la creación de recursos en AWS, configuración de Datadog, y el pipeline de GitHub Actions.
+
+*   **[Manual de Incorporación a Nueva Infraestructura (`docs/Integracion_Sistema_Monitoreo.md`)](docs/Integracion_Sistema_Monitoreo.md):** Guía para adaptar y extender este sistema de monitoreo a otros componentes y servicios de tu infraestructura AWS. 

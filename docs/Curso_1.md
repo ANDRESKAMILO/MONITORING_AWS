@@ -31,7 +31,6 @@
     - [4.1. `.github/workflows/deploy.yml`](#41-githubworkflowsdeployyml)
   - [5. Puesta en Práctica Paso a Paso](#5-puesta-en-práctica-paso-a-paso)
     - [5.1. Clonar y Preparar el Repositorio (Si Aún No lo Has Hecho)](#51-clonar-y-preparar-el-repositorio-si-aún-no-lo-has-hecho)
-    - [5.2. Configurar Credenciales Locales (`secrets.auto.tfvars.json`)](#52-configurar-credenciales-locales-secretsautotfvarsjson)
     - [5.3. Configurar Secretos en GitHub Actions](#53-configurar-secretos-en-github-actions)
     - [5.4. Inicializar Terraform Localmente](#54-inicializar-terraform-localmente)
     - [5.5. Planificar y Aplicar Localmente (Opcional, para Pruebas)](#55-planificar-y-aplicar-localmente-opcional-para-pruebas)
@@ -791,6 +790,30 @@ Durante la configuración de este proyecto, podrías encontrar algunos de estos 
         2.  **Verifica la Integración AWS en Datadog:** Ve a Datadog -> Integrations -> AWS. Confirma que tu cuenta AWS esté integrada, que el rol IAM y el External ID sean correctos, y que no haya errores.
         3.  **Habilita la Recolección de Métricas:** En la configuración de la integración de AWS en Datadog, ve a la pestaña "Metric Collection" y asegúrate de que la recolección esté habilitada para los servicios deseados (ej. EC2) y para la región correcta.
         4.  **Instancia en Ejecución:** Confirma que la instancia EC2 esté realmente en estado "ejecutándose" en la consola de AWS.
+
+*   **Error en GitHub Actions: `The Terraform input variable "nombre_variable" is not set and does not have a default value` (ej. `aws_secret_key`):**
+    *   **Causa Principal:** Aunque el secreto esté definido en GitHub Actions, el paso específico de Terraform (`plan` o `apply`) en el workflow no está recibiendo la variable de entorno `TF_VAR_nombre_variable` correctamente.
+    *   **Solución Detallada:**
+        1.  **Verificar Mapeo de Secretos:** Asegúrate de que en el archivo `.github/workflows/deploy.yml`, el secreto de GitHub esté correctamente mapeado a la variable de entorno `TF_VAR_` en el bloque `env:` del paso correspondiente. Ejemplo:
+            ```yaml
+            env:
+              TF_VAR_aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+              # ... otras variables ...
+            ```
+        2.  **Consistencia en Pasos:** Es crucial que este bloque `env:` esté presente y sea correcto tanto en el paso `Terraform Plan` como en el paso `Terraform Apply` (y cualquier otro paso que ejecute comandos de Terraform que dependan de estas variables). Una omisión común es tenerlo solo en `apply` pero no en `plan`.
+        3.  **Debug (Opcional Avanzado):** Si el problema persiste, puedes añadir un paso de depuración temporal en tu workflow (antes del `terraform plan`) para verificar si las variables de entorno se están estableciendo como esperas, sin imprimir los valores de los secretos:
+            ```yaml
+            - name: Debug Environment Variables
+              shell: bash
+              run: |
+                echo "TF_VAR_aws_secret_key IS SET: $AWS_SECRET_KEY_IS_SET"
+                # Añade otras variables que quieras verificar
+              env:
+                # Define aquí las variables de entorno para el debug, incluyendo las auxiliares:
+                TF_VAR_aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }} # Mapeo regular
+                AWS_SECRET_KEY_IS_SET: ${{ secrets.AWS_SECRET_ACCESS_KEY != '' }} # Booleano para verificar si está seteada
+                # ... otros mapeos y variables auxiliares ...
+            ```
 
 ---
 
