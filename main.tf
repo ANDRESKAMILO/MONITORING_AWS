@@ -37,6 +37,18 @@ resource "datadog_dashboard" "dashboard_kai" {
   restricted_roles = []
 
   widget {
+    note_definition {
+      content          = "#  мониторинг KAI Dashboard\n\nEste dashboard proporciona una visión general de la infraestructura AWS gestionada."
+      background_color = "white"
+      font_size        = "16"
+      text_align       = "left"
+      show_tick        = true
+      tick_edge        = "left"
+      tick_pos         = "50%"    
+    }
+  }
+
+  widget {
     timeseries_definition {
       title       = "EC2 CPU usage (Average)"
       show_legend = true

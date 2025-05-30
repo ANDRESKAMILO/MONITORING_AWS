@@ -328,23 +328,103 @@ resource "datadog_dashboard" "dashboard_kai" {
   is_read_only = false
   // restricted_roles = [] // Opcional: restringe quién puede ver/editar
 
-  widget {
+  widget { // Widget de Nota para "Branding"
+    note_definition {
+      content          = "#  мониторинг KAI Dashboard\n\nEste dashboard proporciona una visión general de la infraestructura AWS gestionada."
+      background_color = "white"
+      font_size        = "16"
+      text_align       = "left"
+      show_tick        = true
+      tick_edge        = "left"
+      tick_pos         = "50%"
+    }
+  }
+
+  widget { // Widget original de Uso de CPU EC2
     timeseries_definition {
       title       = "EC2 CPU usage (Average)"
       show_legend = true
-
       request {
-        q            = "avg:aws.ec2.cpuutilization{*} by {instance_id}" // Consulta básica de CPU
+        q            = "avg:aws.ec2.cpuutilization{*} by {instance_id}"
         display_type = "line"
       }
-      // Puedes añadir más requests para otras métricas o visualizaciones
     }
-    // layout { // Ajusta la posición y tamaño si es necesario, pero "ordered" lo maneja bien
-    //   x      = 0 
-    //   y      = 0
-    //   width  = 47
-    //   height = 15
-    // }
+  }
+
+  // Nuevos Widgets Añadidos:
+  widget {
+    timeseries_definition {
+      title       = "EC2 CPU Credit Balance (Average)"
+      show_legend = true
+      request {
+        q            = "avg:aws.ec2.cpucredit_balance{*} by {instance_id}"
+        display_type = "line"
+      }
+    }
+  }
+
+  widget {
+    timeseries_definition {
+      title       = "EC2 Disk Read/Write Ops (Sum)"
+      show_legend = true
+      request {
+        q            = "sum:aws.ec2.disk_read_ops{*} by {instance_id}.as_count()"
+        display_type = "bars"
+      }
+      request {
+        q            = "sum:aws.ec2.disk_write_ops{*} by {instance_id}.as_count()"
+        display_type = "bars"
+      }
+    }
+  }
+
+  widget {
+    timeseries_definition {
+      title       = "EC2 Network In/Out (Sum)"
+      show_legend = true
+      request {
+        q            = "sum:aws.ec2.network_in{*} by {instance_id}.as_rate()"
+        display_type = "line"
+      }
+      request {
+        q            = "sum:aws.ec2.network_out{*} by {instance_id}.as_rate()"
+        display_type = "line"
+      }
+    }
+  }
+
+  widget {
+    timeseries_definition {
+      title       = "S3 Bucket Size (Bytes)"
+      show_legend = true
+      request {
+        q            = "avg:aws.s3.bucket_size_bytes{bucket_name:${aws_s3_bucket.example.bucket}} by {bucket_name}"
+        display_type = "area"
+      }
+    }
+  }
+
+  widget {
+    query_value_definition {
+      title           = "S3 Number of Objects"
+      precision       = 0
+      live_span       = "5m"
+      custom_unit     = "object"
+      request {
+        q = "max:aws.s3.number_of_objects{bucket_name:${aws_s3_bucket.example.bucket}}.as_count()"
+      }
+    }
+  }
+
+  widget {
+    timeseries_definition {
+      title       = "S3 Client Errors (4xx Sum)"
+      show_legend = true
+      request {
+        q            = "sum:aws.s3.4xx_errors{bucket_name:${aws_s3_bucket.example.bucket}} by {bucket_name}.as_count()"
+        display_type = "bars"
+      }
+    }
   }
   // Puedes añadir más widgets aquí para S3, logs, etc.
 }
