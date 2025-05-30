@@ -65,11 +65,11 @@ resource "datadog_dashboard" "dashboard_kai" {
       show_legend = true
       request {
         q            = "sum:aws.ec2.disk_read_ops{*} by {instance_id}.as_count()"
-        display_type = "bar"
+        display_type = "bars"
       }
       request {
         q            = "sum:aws.ec2.disk_write_ops{*} by {instance_id}.as_count()"
-        display_type = "bar"
+        display_type = "bars"
       }
     }
   }
@@ -118,7 +118,7 @@ resource "datadog_dashboard" "dashboard_kai" {
       show_legend = true
       request {
         q            = "sum:aws.s3.4xx_errors{bucket_name:${aws_s3_bucket.example.bucket}} by {bucket_name}.as_count()"
-        display_type = "bar"
+        display_type = "bars"
       }
     }
   }
