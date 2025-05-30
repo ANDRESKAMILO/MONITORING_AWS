@@ -456,7 +456,7 @@ terraform.tfvars
 .terraform.lock.hcl
 
 # Credenciales locales - ¡NUNCA SUBIR A GIT!
-secrets.auto.tfvars.json 
+secrets.auto.tfvars.json
 # Si usas terraform.tfvars para secretos, también ignóralo:
 # terraform.tfvars
 
@@ -589,7 +589,7 @@ Ahora que hemos configurado nuestros proveedores, variables y el pipeline de Git
 ### 5.1. Clonar y Preparar el Repositorio (Si Aún No lo Has Hecho)
 
 1.  **Clona tu repositorio de GitHub** a tu máquina local:
-    ```bash
+```bash
     git clone https://github.com/TU_USUARIO/TU_REPOSITORIO.git
     cd TU_REPOSITORIO
     ```
@@ -736,7 +736,7 @@ Este proyecto sienta las bases para un monitoreo robusto. Aquí algunas consider
     *   Para obtener métricas mucho más detalladas del sistema operativo, procesos, consumo de memoria específico, logs, trazas de aplicaciones (APM) y más, necesitas instalar el Agente de Datadog directamente en tus instancias EC2.
     *   Puedes automatizar la instalación del agente usando el campo `user_data` en el recurso `aws_instance` de Terraform, o mediante herramientas de gestión de configuración (Ansible, Chef, Puppet).
     *   Ejemplo básico de `user_data` para instalar el agente (requiere tu API Key de Datadog como variable en `variables.tf` y pasada al `user_data`):
-        ```hcl
+```hcl
         // En el recurso aws_instance "example_ec2"
         user_data = <<-EOF
                     #!/bin/bash

@@ -8,6 +8,10 @@ terraform {
       source  = "hashicorp/aws"
       version = "~> 5.0"
     }
+    random = {
+      source  = "hashicorp/random"
+      version = "~> 3.1"
+    }
   }
 }
 
@@ -45,9 +49,15 @@ resource "datadog_dashboard" "dashboard_kai" {
   }
 }
 
+resource "random_string" "bucket_suffix" {
+  length  = 8
+  special = false
+  upper   = false
+}
+
 # Bucket S3 de ejemplo
 resource "aws_s3_bucket" "example" {
-  bucket = "example-bucket-acbg-may25-${var.aws_region}"
+  bucket = "example-bucket-acbg-may25-${var.aws_region}-${random_string.bucket_suffix.result}"
 
   tags = {
     Environment = "Development"
