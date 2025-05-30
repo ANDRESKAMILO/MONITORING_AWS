@@ -104,7 +104,7 @@ resource "datadog_dashboard" "dashboard_kai" {
     query_value_definition {
       title           = "S3 Number of Objects"
       precision       = 0
-      timespan        = "5m"
+      live_span       = "5m"
       custom_unit     = "object"
       request {
         q = "max:aws.s3.number_of_objects{bucket_name:${aws_s3_bucket.example.bucket}}.as_count()"
