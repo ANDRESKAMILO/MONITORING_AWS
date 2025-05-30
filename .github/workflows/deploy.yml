@@ -25,6 +25,41 @@ jobs:
       - name: Terraform Validate
         run: terraform validate
 
+      - name: Debug Environment Variables (Check if Set)
+        shell: bash
+        run: |
+          echo "--- Checking if TF_VAR environment variables are set ---"
+          echo "TF_VAR_datadog_api_key IS SET: $DATADOG_API_KEY_IS_SET"
+          echo "TF_VAR_datadog_app_key IS SET: $DATADOG_APP_KEY_IS_SET"
+          echo "TF_VAR_datadog_site IS SET: $DATADOG_SITE_IS_SET"
+          echo "TF_VAR_aws_access_key IS SET: $AWS_ACCESS_KEY_IS_SET"
+          echo "TF_VAR_aws_secret_key IS SET: $AWS_SECRET_KEY_IS_SET"
+          echo "TF_VAR_aws_region IS SET: $AWS_REGION_IS_SET"
+          echo "TF_VAR_external_id IS SET: $EXTERNAL_ID_IS_SET"
+          echo "TF_VAR_ec2_ssh_private_key IS SET: $EC2_SSH_PRIVATE_KEY_IS_SET"
+          echo "TF_VAR_ec2_user IS SET: $EC2_USER_IS_SET"
+          echo "--- Finished checking ---"
+        env:
+          TF_VAR_datadog_api_key: ${{ secrets.DATADOG_API_KEY }}
+          TF_VAR_datadog_app_key: ${{ secrets.DATADOG_APP_KEY }}
+          TF_VAR_datadog_site: ${{ secrets.DATADOG_SITE }}
+          TF_VAR_aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          TF_VAR_aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          TF_VAR_aws_region: ${{ secrets.AWS_REGION }}
+          TF_VAR_external_id: ${{ secrets.DATADOG_EXTERNAL_ID }}
+          TF_VAR_ec2_ssh_private_key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
+          TF_VAR_ec2_user: ${{ secrets.EC2_USER }}
+
+          DATADOG_API_KEY_IS_SET: ${{ secrets.DATADOG_API_KEY != '' }}
+          DATADOG_APP_KEY_IS_SET: ${{ secrets.DATADOG_APP_KEY != '' }}
+          DATADOG_SITE_IS_SET: ${{ secrets.DATADOG_SITE != '' }}
+          AWS_ACCESS_KEY_IS_SET: ${{ secrets.AWS_ACCESS_KEY_ID != '' }}
+          AWS_SECRET_KEY_IS_SET: ${{ secrets.AWS_SECRET_ACCESS_KEY != '' }}
+          AWS_REGION_IS_SET: ${{ secrets.AWS_REGION != '' }}
+          EXTERNAL_ID_IS_SET: ${{ secrets.DATADOG_EXTERNAL_ID != '' }}
+          EC2_SSH_PRIVATE_KEY_IS_SET: ${{ secrets.EC2_SSH_PRIVATE_KEY != '' }}
+          EC2_USER_IS_SET: ${{ secrets.EC2_USER != '' }}
+
       - name: Terraform Plan
         run: terraform plan -input=false
 
